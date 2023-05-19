@@ -46,4 +46,40 @@ class Usuario {
         }
     }
 
+
+
+
+    public function get(){
+        $con = Conexao::getInstance();
+        $sql = "select id, nome, email, foto from usuario \n".
+        "where id = :id";
+        $st = $con->prepare($sql);
+        $st->bindValue(":id",$this->email);
+        $st->execute();
+        $registros = $st->fetchAll();
+        if(count($registros)>0) {
+            $reg = $registros[0];
+            $this->id = $reg["id"];
+            $this->nome = $reg["nome"];
+            $this->email = $reg["email"];
+            $this->foto = $reg["foto"];
+        }
+    }
+
+
+    public function udpateFoto(){
+        $con = Conexao::getInstance();
+        $sql = "update usuario set foto = :foto where id = :id";
+        $st = $con->prepare($sql);
+        $st->bindValue(":foto",$this->foto);
+        $st->bindValue(":id",$this->id);
+        try {
+            $st->execute();
+            return ['ok'=>true];
+        } catch(PDOException $e) {
+            return ['ok'=>false,'erro'=>$e->getMessage()];
+        }
+        
+    }
+
 }

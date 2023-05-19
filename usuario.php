@@ -22,7 +22,26 @@ if ($method=="POST") {
       exit( json_encode(['ok'=>true,'usuario'=>$usuario]));
     else 
       exit( http_response_code(403));   
-      
+} else if ($method=="POST" && isset($_POST["foto"])) {
+    $usuario = new Usuario();
+    $usuario->get($_POST["usuario_id"]);
+    if ($usuario->id>0) {
+      $pasta = "imagens";
+      $gername = dechex(time()); 
+      $filename = "$pasta/$gername.jpeg";
+      $arquivo = fopen($filename,'w+');
+      $foto = $_POST["foto"];
+      fwrite($arquivo, $foto);
+      fclose($arquivo);
+      if ($arquivo == false) throw new Exception("Erro salvando foto");
+      if ($usuario->foto){ 
+        unlink("$pasta/$usuario->foto");
+      }
+      $usuario->foto = "$gername.jpeg";
+      $usuario->updateFoto();
+   } else {
+      exit( http_response_code(500)); // internal error
+    }
 } else { 
   exit( http_response_code(400));   
 }

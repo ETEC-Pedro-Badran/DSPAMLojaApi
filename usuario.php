@@ -5,8 +5,8 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method=="POST") {
     
-    $json = file_get_contents("php://input");
-    print($json);
+    $json = json_decode( file_get_contents("php://input"));
+    //error_log(print_r($json, true));
     $usuario = new Usuario();
     $usuario->email = $json->email;
     $usuario->nome = $json->nome;
@@ -22,6 +22,7 @@ if ($method=="POST") {
       exit( json_encode(['ok'=>true,'usuario'=>$usuario]));
     else 
       exit( http_response_code(403));   
+      
 } else { 
   exit( http_response_code(400));   
 }

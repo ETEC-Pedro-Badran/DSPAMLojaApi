@@ -5,7 +5,7 @@ class Usuario {
     public $id;
     public $nome;
     public $email;
-    private $senha;
+    public $senha;
     public $foto;
 
     public function setSenha($senha) {
@@ -49,12 +49,12 @@ class Usuario {
 
 
 
-    public function get(){
+    public function get($id){
         $con = Conexao::getInstance();
         $sql = "select id, nome, email, foto from usuario \n".
         "where id = :id";
         $st = $con->prepare($sql);
-        $st->bindValue(":id",$this->email);
+        $st->bindValue(":id",$id);
         $st->execute();
         $registros = $st->fetchAll();
         if(count($registros)>0) {
@@ -67,12 +67,20 @@ class Usuario {
     }
 
 
-    public function udpateFoto(){
+    public function update(){
         $con = Conexao::getInstance();
-        $sql = "update usuario set foto = :foto where id = :id";
+        $senha = "";
+        if ($this->senha!=null && strlen($this->senha)>0) {
+            $senha = ", senha = :senha ";
+        }
+        $sql = "update usuario set nome = :nome, email = :email, foto = :foto $senha where id = :id";
         $st = $con->prepare($sql);
+        $st->bindValue(":nome",$this->nome);        
+        $st->bindValue(":email",$this->email);                
         $st->bindValue(":foto",$this->foto);
         $st->bindValue(":id",$this->id);
+        if ($this->senha!=null && strlen($this->senha)>0) {
+        }        $st->bindValue(":senha",$this->senha);
         try {
             $st->execute();
             return ['ok'=>true];

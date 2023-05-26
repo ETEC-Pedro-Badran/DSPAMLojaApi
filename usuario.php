@@ -38,9 +38,7 @@ if ($method=="GET" && isset($_GET["email"]) &&
         $usuario->foto = "$gername.jpeg";
         $usuario->update();
       }
-      
-      
-   } else {
+    } else {
       exit( http_response_code(500)); // internal error
     }
 

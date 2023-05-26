@@ -29,7 +29,7 @@ if ($method=="GET" && isset($_GET["email"]) &&
         $filename = "$pasta/$gername.jpeg";
         $arquivo = fopen($filename,'w+');
         $foto = $_POST["upload"];
-        fwrite($arquivo, $foto);
+        fwrite($arquivo, base64_decode($foto));
         fclose($arquivo);
         if ($arquivo == false) throw new Exception("Erro salvando foto");
         if ($usuario->foto){ 
@@ -44,7 +44,7 @@ if ($method=="GET" && isset($_GET["email"]) &&
       exit( http_response_code(500)); // internal error
     }
 
-    http_response_code(500);
+   
     
 } else if ($method=="POST") {
   $json = json_decode( file_get_contents("php://input"));
